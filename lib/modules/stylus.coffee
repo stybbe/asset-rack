@@ -40,4 +40,6 @@ class exports.StylusAsset extends Asset
                                 specificUrl = @rack.url url
                                 if specificUrl?
                                     css = css.replace result, "url(#{quote}#{specificUrl}#{quote})"
+                    if options.callback
+                        options.callback css
                     @emit 'created', contents: css
