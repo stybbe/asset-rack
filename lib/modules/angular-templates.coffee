@@ -24,7 +24,7 @@ class exports.AngularTemplatesAsset extends Asset
             else
                 template = fs.readFileSync(pathutil.join(dirname, file), 'utf8').replace(/\\/g, '\\\\').replace(/\n|\r\n|\r/g, '\\n').replace(/'/g, '\\\'')
 
-            templates.push "$templateCache.put('" + path + file + "', '" + template + "')"
+            templates.push "$templateCache.put('#{path}#{file}','#{template}')"
 
     create: (options) ->
         options.dirname ?= options.directory # for backwards compatiblity
@@ -36,7 +36,9 @@ class exports.AngularTemplatesAsset extends Asset
 
         addTemplates(templates, @dirname, "")
 
-        javascript = "var angularTemplates = function($templateCache) {\n#{templates.join('\n')}}"
+        variableName = options.variableName or 'angularTemplates';
+
+        javascript = "var #{variableName} = function($templateCache) {\n#{templates.join('\n')}}"
         if options.compress is true
             @contents = uglify.minify(javascript, { fromString: true }).code
         else
